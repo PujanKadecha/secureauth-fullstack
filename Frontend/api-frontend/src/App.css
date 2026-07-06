@@ -1,0 +1,180 @@
+.app-container {
+  font-family: 'Arial', sans-serif;
+  padding: 40px;
+  max-width: 600px;
+  margin: auto;
+}
+
+.app-title {
+  text-align: center;
+  color: #333;
+}
+
+
+.alert-success {
+  color: #1e4620;
+  background-color: #e6f4ea;
+  padding: 12px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+.alert-error {
+  color: #5c0f08;
+  background-color: #fce8e6;
+  padding: 12px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+
+.auth-card {
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.form-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.input-field {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+
+.nav-bar {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.nav-toggle-bar {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+
+.btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: opacity 0.2s ease;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+.btn-primary { background-color: #008CBA; color: white; }
+.btn-success { background-color: #4CAF50; color: white; }
+.btn-danger  { background-color: #f44336; color: white; }
+.btn-muted   { background-color: #e7e7e7; color: black; }
+
+.btn-google {
+  background-color: #4285F4;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.btn-tab {
+  background: none;
+  border: none;
+  font-size: 14px;
+  padding: 5px 10px;
+}
+
+.active-tab {
+  font-weight: bold;
+  border-bottom: 2px solid #333;
+}
+
+
+.divider-container {
+  display: flex;
+  align-items: center;
+  margin: 15px 0;
+}
+
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background-color: #ccc;
+}
+
+.divider-text {
+  padding: 0 10px;
+  color: #666;
+  font-size: 14px;
+}
+
+
+.user-directory-box {
+  margin-top: 20px;
+}
+
+.user-list {
+  padding-left: 20px;
+  line-height: 1.6;
+}
+
+
+.nav-bar {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.btn-tab {
+  background: none;
+  border: none;
+  font-size: 14px;
+  padding: 5px 10px;
+  cursor: pointer;
+  color: #555;
+  transition: all 0.2s ease;
+}
+
+.btn-tab:hover {
+  color: #008CBA;
+}
+
+
+.active-tab {
+  font-weight: bold;
+  color: #008CBA;
+  border-bottom: 2px solid #008CBA;
+}
+
+
+.profile-view-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+}
+
+.profile-info-text {
+  font-size: 15px;
+  margin: 5px 0;
+  color: #333;
+}
