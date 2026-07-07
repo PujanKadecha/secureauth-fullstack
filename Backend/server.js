@@ -15,7 +15,7 @@ const PORT = process.env.PORT;
 
 app.use(
   cors({
-    origin: [process.env.CLIENT_URL,"https://secureauth-fullstack-zln8.vercel.app/"] ,
+    origin: [process.env.CLIENT_URL,"https://secureauth-fullstack-zln8.vercel.app"] ,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
