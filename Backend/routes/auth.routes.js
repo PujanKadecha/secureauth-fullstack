@@ -30,7 +30,7 @@ router.get(
 router.get(
   "/google/callback",
   passport.authenticate("google", {
-    failureRedirect: "http://localhost:3000?error=oauth_failed",
+    failureRedirect: "secureauth-fullstack.vercel.app?error=oauth_failed",
     session: false,
   }),
   authController.googleCallback,

@@ -48,7 +48,7 @@ exports.googleCallback = catchAsync(async (req, res) => {
   );
 
   return res.redirect(
-    `http://localhost:3000?token=${accessToken}&refresh=${refreshToken}&user=${userData}`,
+    `secureauth-fullstack.vercel.app?token=${accessToken}&refresh=${refreshToken}&user=${userData}`,
   );
 });
 

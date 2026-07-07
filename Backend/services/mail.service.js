@@ -24,7 +24,7 @@ const renderEmailTemplate = async (templateName, data) => {
 };
 
 const sendVerificationEmail = async (user, token) => {
-  const verificationLink = `${process.env.CLIENT_URL || 'http://localhost:3000'}?verifyToken=${token}`;
+  const verificationLink = `${process.env.CLIENT_URL || 'secureauth-fullstack.vercel.app'}?verifyToken=${token}`;
 
   const html = await renderEmailTemplate("verification.html", {
     name: user.name,
@@ -40,7 +40,7 @@ const sendVerificationEmail = async (user, token) => {
 };
 
 const sendPasswordResetEmail = async (user, token) => {
-  const resetLink = `${process.env.CLIENT_URL || 'http://localhost:3000'}?resetToken=${token}`;
+  const resetLink = `${process.env.CLIENT_URL || 'secureauth-fullstack.vercel.app'}?resetToken=${token}`;
 
   const html = await renderEmailTemplate("password-reset.html", {
     name: user.name,
