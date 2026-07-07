@@ -2,24 +2,15 @@ const authService = require("../services/auth.service");
 const catchAsync = require("../utils/catchAsync");
 
 exports.register = catchAsync(async (req, res) => {
-  const result = await authService.register(req.body);
+  await authService.register(req.body);
 
   res.status(201).json({
     message: "Registration done! Please check your email for verification.",
-    user: {
-      id: result._id,
-      name: result.name,
-      email: result.email,
-      role: result.role,
-    },
   });
 });
 
 exports.login = catchAsync(async (req, res) => {
-  const result = await authService.login(req.body, {
-    ip: req.ip,
-    userAgent: req.headers["user-agent"],
-  });
+  const result = await authService.login(req.body);
 
   if (result.isTwoFactorRequired) {
     return res.status(200).json({
@@ -45,13 +36,8 @@ exports.verifyEmail = catchAsync(async (req, res) => {
 exports.googleCallback = catchAsync(async (req, res) => {
   const { accessToken, refreshToken, user } = await authService.googleLogin(
     req.user,
-    {
-      ip: req.ip,
-      userAgent: req.headers["user-agent"],
-    },
   );
 
-  const frontendUrl = process.env.CLIENT_URL || process.env.FRONTEND_URL || "http://localhost:3000";
   const userData = encodeURIComponent(
     JSON.stringify({
       id: user._id,
@@ -62,15 +48,12 @@ exports.googleCallback = catchAsync(async (req, res) => {
   );
 
   return res.redirect(
-    `${frontendUrl}?token=${accessToken}&refresh=${refreshToken}&user=${userData}`,
+    `http://localhost:3000?token=${accessToken}&refresh=${refreshToken}&user=${userData}`,
   );
 });
 
 exports.verifyTwoFactorLogin = catchAsync(async (req, res) => {
-  const result = await authService.verifyTwoFactorLogin(req.body, {
-    ip: req.ip,
-    userAgent: req.headers["user-agent"],
-  });
+  const result = await authService.verifyTwoFactorLogin(req.body);
   return res.status(200).json(result);
 });
 
@@ -90,8 +73,3 @@ exports.disableTwoFactor = catchAsync(async (req, res) => {
   await authService.disableTwoFactor(req.user.id);
   return res.json({ message: "2FA successfully disabled" });
 });
-
-exports.logoutAllDevices = catchAsync(async(req,res) => {
-  const result = await authService.logoutAllDevice(req.body.id);
-  return res.json(result)
-})

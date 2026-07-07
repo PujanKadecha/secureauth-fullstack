@@ -14,14 +14,14 @@ export function useAuth() {
   const [errorMsg, setErrorMsg] = useState("");
   const [activeResetToken, setActiveResetToken] = useState("");
 
+  const [allUsers, setAllUsers] = useState("");
+  const [activityLogs, setActivityLogs] = useState("");
   const [twoFactorCode, setTwoFactorCode] = useState("");
   const [tempUserId, setTempUserId] = useState("");
   const [isSettingUp2FA, setIsSettingUp2FA] = useState(false);
   const [qrCodeUrl, setQqCodeUrl] = useState("");
   const [twoFactorSecret, setTwoFactorSecret] = useState("");
   const [twoFactorSetupCode, setTwoFactorSetupCode] = useState("");
-
-  const [loginHistory, setLoginHistory] = useState([]);
 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
@@ -80,25 +80,6 @@ export function useAuth() {
     }
   }, []);
 
-  useEffect(() => {
-    if (view === "profile") {
-      fetchLoginHistory();
-    }
-  }, [view]);
-
-  const fetchLoginHistory = async () => {
-    try {
-      const token = localStorage.getItem("accessToken");
-      const res = await API.get("/users/login-history", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setLoginHistory(res.data.loginHistory || []);
-    } catch (err) {
-      console.log("Failed to load login history", err);
-      setLoginHistory([]);
-    }
-  };
-
   const clearMessages = () => {
     setMessage("");
     setErrorMsg("");
@@ -122,7 +103,11 @@ export function useAuth() {
       setMessage(`Successfully logged in! Welcome, ${res.data.user.name}.`);
       setView("dashboard");
     } catch (err) {
-      setErrorMsg(err.response?.data?.message || "Login failed");
+      setErrorMsg(
+        err.response?.data?.message ||
+          err.response?.data?.errors?.[0] ||
+          "Login failed",
+      );
     }
   };
 
@@ -153,32 +138,14 @@ export function useAuth() {
     e.preventDefault();
     clearMessages();
     try {
-      const res = await API.post("/auth/register", {
-        name,
-        email,
-        password,
-      });
-      setMessage(
-        res.data.message || "Registration done! Please check your email.",
-      );
-
-      setName("");
-      setEmail("");
-      setPassword("");
+      const res = await API.post("/auth/register", { name, email, password });
+      setMessage(res.data.message);
     } catch (err) {
-      console.error("Registration error:", err);
-
-      const backendMessage =
-        err?.response?.data?.message ||
-        err?.response?.data?.error ||
-        err?.message ||
-        "Registration failed. Please try again.";
-
-      if (typeof backendMessage === "string") {
-        setErrorMsg(backendMessage);
-      } else {
-        setErrorMsg("Registration failed. Please try again.");
-      }
+      setErrorMsg(
+        err.response?.data?.message ||
+          err.response?.data?.errors?.[0] ||
+          "Registration failed",
+      );
     }
   };
 
@@ -225,6 +192,8 @@ export function useAuth() {
     } finally {
       localStorage.clear();
       setUser(null);
+      setAllUsers([]);
+      setActivityLogs([]);
       setView("login");
       setMessage("Logged out successfully.");
     }
@@ -319,7 +288,6 @@ export function useAuth() {
     }
   };
 
-
   return {
     name,
     setName,
@@ -347,7 +315,6 @@ export function useAuth() {
     twoFactorSecret,
     twoFactorSetupCode,
     setTwoFactorSetupCode,
-    loginHistory,
     clearMessages,
     handleLogin,
     handle2FALogin,

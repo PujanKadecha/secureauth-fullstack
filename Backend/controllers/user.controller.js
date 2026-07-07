@@ -118,15 +118,3 @@ exports.updateUserRole = catchAsync(async (req, res) => {
     user: updatedUser,
   });
 });
-
-exports.getLoginHistory = catchAsync(async (req, res) => {
-  const User = require("../models/users");
-
-  const user = await User.findById(req.user.id).select("loginHistory");
-
-  if (!user) {
-    throw new AppError("User not found", 404);
-  }
-
-  res.json({ loginHistory: user.loginHistory || [] });
-});

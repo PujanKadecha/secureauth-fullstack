@@ -17,16 +17,6 @@ router.get(
   authorizeRole("admin"),
   userController.getActivityLogs,
 );
-router.post("/forgot-password", userController.forgotPassword);
-router.post("/reset-password/:token", userController.resetPassword);
-router.put("/profile", authenticationToken, userController.updateProfile);
-router.post("/refresh", userController.refreshToken);
-router.get(
-  "/login-history",
-  authenticationToken,
-  userController.getLoginHistory,
-);
-
 router.get("/:id", authenticationToken, userController.getUserById);
 router.delete(
   "/:id",
@@ -34,7 +24,11 @@ router.delete(
   authorizeRole("admin"),
   userController.deleteUser,
 );
+router.post("/forgot-password", userController.forgotPassword);
+router.post("/reset-password/:token", userController.resetPassword);
+router.put("/profile", authenticationToken, userController.updateProfile);
 router.put("/:id", authenticationToken, userController.updateUser);
+router.post("/refresh", userController.refreshToken);
 router.post(
   "/:id/unlock",
   authenticationToken,
@@ -48,6 +42,5 @@ router.put(
   authorizeRole("admin"),
   userController.updateUserRole,
 );
-
 
 module.exports = router;

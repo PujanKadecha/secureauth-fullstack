@@ -45,20 +45,14 @@ const userSChema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  failedLoginAttempts: {
-    type: Number,
-    default: 0,
+  failedLoginAttempts : {
+    type : Number,
+    default : 0
   },
-  lockUntil: {
-    type: Date,
-    default: null,
-  },
-  loginHistory: [{
-  timestamp: { type: Date, default: Date.now },
-  ip: String,
-  userAgent: String,
-  success: Boolean
-}]
+  lockUntil : {
+    type : Date,
+    default : null
+  }
 });
 
 module.exports = mongoose.model("User", userSChema);

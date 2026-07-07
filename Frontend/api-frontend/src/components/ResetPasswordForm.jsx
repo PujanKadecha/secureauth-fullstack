@@ -1,44 +1,21 @@
-import PasswordStrengthMeter from "./PasswordStrengthMeter";
-
-function ResetPasswordForm({
-  newPassword,
-  setNewPassword,        // ← Changed to setNewPassword
-  onSubmit,
-  onBackToLogin,
-}) {
+function ResetPasswordForm({ newPassword, onPasswordChange, onSubmit }) {
   return (
-    <div className="form-container">
-      <h2>Reset Your Password</h2>
-      <form onSubmit={onSubmit} className="form-layout">
-        <div>
-          <label>New Password</label>
-          <input
-            type="password"
-            placeholder="Enter new password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            required
-            className="input-field"
-            minLength={6}
-          />
-          <PasswordStrengthMeter password={newPassword} />
-        </div>
-
-        <button type="submit" className="btn btn-primary">
-          Update Password
-        </button>
-
-        {onBackToLogin && (
-          <button
-            type="button"
-            onClick={onBackToLogin}
-            className="btn btn-muted"
-          >
-            Back to Login
-          </button>
-        )}
-      </form>
-    </div>
+    <form onSubmit={onSubmit} className="form-layout">
+      <h3>Set a New Password</h3>
+      <p style={{ fontSize: "14px", color: "#666" }}>Enter a New Password</p>
+      <input
+        type="password"
+        placeholder="Enter New password"
+        value={newPassword}
+        onChange={(e) => onPasswordChange(e.target.value)}
+        required
+        className="input-field"
+        minLength={6}
+      />
+      <button type="submit" className="btn btn-primary">
+        Update Password
+      </button>
+    </form>
   );
 }
 

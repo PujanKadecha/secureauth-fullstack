@@ -1,5 +1,3 @@
-import LoginHistory from "./LoginHistory";
-
 function ProfileView({
   user,
   editName,
@@ -14,8 +12,6 @@ function ProfileView({
   onEnable2FA,
   onDisable2FA,
   onCancelSetup,
-  loginHistory,
-  
 }) {
   return (
     <div className="profile-view-container">
@@ -40,6 +36,7 @@ function ProfileView({
           {user?.isTwoFactorEnabled ? "Active" : "Disabled"}
         </span>
       </p>
+
       <hr style={{ border: "0.5px solid #eee", margin: "15px 0" }} />
 
       <form onSubmit={onUpdateProfile} className="form-layout">
@@ -56,12 +53,6 @@ function ProfileView({
           Save Changes
         </button>
       </form>
-
-      <hr style={{ border: "0.5px solid #eee", margin: "25px 0" }} />
-
-      <div style={{ marginTop: "20px" }}>
-        <LoginHistory loginHistory={loginHistory || []} />
-      </div>
 
       <hr style={{ border: "0.5px solid #eee", margin: "25px 0" }} />
 

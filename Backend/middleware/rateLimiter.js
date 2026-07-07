@@ -12,7 +12,7 @@ const generalLimiter = rateLimit({
 
 const authLimitter = rateLimit({
     windowMs : 15 * 60 * 1000,
-    max : 15 , 
+    max : 7 , 
     message : {
         error : "Too many login/registration attempts"
     },

@@ -24,14 +24,7 @@ const register = async ({ name, email, password }) => {
     verificationToken: emailToken,
   });
 
-  Promise.race([
-    mailService.sendVerificationEmail(newUser, emailToken),
-    new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("Email send timed out")), 5000),
-    ),
-  ]).catch((mailError) => {
-    console.error("Verification email could not be sent:", mailError);
-  });
+  await mailService.sendVerificationEmail(newUser, emailToken);
 
   await activityService.logActivity({
     userId: newUser._id,
@@ -43,10 +36,7 @@ const register = async ({ name, email, password }) => {
   return newUser;
 };
 
-const login = async (
-  { email, password },
-  { ip = "Unknown", userAgent = "Unknown" } = {},
-) => {
+const login = async ({ email, password }) => {
   const user = await User.findOne({ email });
   if (!user) {
     throw new AppError("Invalid Email or Password", 400);
@@ -66,22 +56,13 @@ const login = async (
     user.failedLoginAttempts = (user.failedLoginAttempts || 0) + 1;
 
     if (user.failedLoginAttempts >= 5) {
-      user.lockUntil = Date.now() + 15 * 60 * 1000;
+      user.lockUntil = Date.now() + 15 * 60 * 1000; 
       await user.save();
       throw new AppError(
         "Too many failed attempts. Account locked for 15 minutes.",
         423,
       );
     }
-
-    user.loginHistory.unshift({
-      timestamp: new Date(),
-      ip,
-      userAgent,
-      success: false,
-    });
-
-    user.loginHistory = user.loginHistory.slice(0, 10);
 
     await user.save();
     throw new AppError("Invalid Password", 400);
@@ -90,21 +71,12 @@ const login = async (
   if (user.failedLoginAttempts > 0) {
     user.failedLoginAttempts = 0;
     user.lockUntil = null;
+    await user.save();
   }
 
   if (!user.isVerified) {
     throw new AppError("Please Verify User", 401);
   }
-
-  user.loginHistory.unshift({
-    timestamp: new Date(),
-    ip,
-    userAgent,
-    success: true,
-  });
-
-  user.loginHistory = user.loginHistory.slice(0, 10);
-  await user.save();
 
   await activityService.logActivity({
     userId: user._id,
@@ -166,23 +138,10 @@ const verifyEmail = async (token) => {
   return user;
 };
 
-const googleLogin = async (
-  user,
-  { ip = "Unknown", userAgent = "Unknown" } = {},
-) => {
+const googleLogin = async (user) => {
   if (!user) {
     throw new AppError("OAuth user not found", 400);
   }
-
-  user.loginHistory.unshift({
-    timestamp: new Date(),
-    ip,
-    userAgent,
-    success: true,
-  });
-
-  user.loginHistory = user.loginHistory.slice(0, 10);
-  await user.save();
 
   const { accessToken, refreshToken } =
     await tokenService.generateAuthTokens(user);
@@ -197,10 +156,7 @@ const googleLogin = async (
   return { accessToken, refreshToken, user };
 };
 
-const verifyTwoFactorLogin = async (
-  { userId, token },
-  { ip = "Unknown", userAgent = "Unknown" } = {},
-) => {
+const verifyTwoFactorLogin = async ({ userId, token }) => {
   const user = await User.findById(userId);
   if (!user) {
     throw new AppError("User not Found", 404);
@@ -210,16 +166,6 @@ const verifyTwoFactorLogin = async (
   if (!isValid) {
     throw new AppError("Invalid 2FA Verification Code", 400);
   }
-
-  user.loginHistory.unshift({
-    timestamp: new Date(),
-    ip,
-    userAgent,
-    success: true,
-  });
-
-  user.loginHistory = user.loginHistory.slice(0, 10);
-  await user.save();
 
   const { accessToken, refreshToken } =
     await tokenService.generateAuthTokens(user);
@@ -278,24 +224,6 @@ const disableTwoFactor = async (userId) => {
   await user.save();
 };
 
-const logoutAllDevice = async (userId) => {
-  const user = await User.findById(userId);
-
-  if (!user) {
-    throw new AppError("User not Found", 404);
-  }
-  user.refreshToken = [];
-  await user.save();
-
-  await activityService.logActivity({
-    userId: user._id,
-    userEmail: user.email,
-    action: "LOGOUT_ALL_DEVICES",
-    details: "User logged out from all devices",
-  });
-  return { message: "Logged out from all devices successfully" };
-};
-
 module.exports = {
   register,
   login,
@@ -306,5 +234,4 @@ module.exports = {
   setupTwoFactor,
   enableTwoFactor,
   disableTwoFactor,
-  logoutAllDevice,
 };

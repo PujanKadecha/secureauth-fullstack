@@ -15,6 +15,7 @@ function App() {
   const auth = useAuth();
   const admin = useAdmin(auth.clearMessages, auth.setErrorMsg, auth.setMessage);
 
+
   return (
     <div className="app-container">
       <h1 className="app-title">Auth API Dashboard</h1>
@@ -68,8 +69,6 @@ function App() {
               onEnable2FA={auth.handleEnable2FA}
               onDisable2FA={auth.handleDisable2FA}
               onCancelSetup={() => auth.setIsSettingUp2FA(false)}
-              loginHistory={auth.loginHistory}
-
             />
           )}
 
@@ -80,9 +79,9 @@ function App() {
               activityLogs={admin.activityLogs}
               onRefresh={admin.fetchAdminData}
               onDeleteUser={admin.handleDeleteUser}
+              onExportLogs={admin.handleExportLogsCSV}
               onUnlockUser={admin.handleUnlockUser}
               onChangeRole={admin.handleChangeRole}
-              onExportLogs={admin.handleExportLogsCSV}
             />
           )}
 
@@ -122,19 +121,6 @@ function App() {
             </button>
           </div>
 
-          {auth.view === "register" && (
-            <RegisterForm
-              name={auth.name}
-              setName={auth.setName}
-              email={auth.email}
-              setEmail={auth.setEmail}
-              password={auth.password}
-              setPassword={auth.setPassword}
-              onRegister={auth.handleRegister}
-              onSwitchToLogin={() => auth.setView("login")}
-            />
-          )}
-
           {auth.view === "login" && (
             <LoginForm
               onEmailChange={auth.setEmail}
@@ -142,7 +128,6 @@ function App() {
               onLogin={auth.handleLogin}
             />
           )}
-
           {auth.view === "2fa-login" && (
             <TwoFactorLoginForm
               twoFactorCode={auth.twoFactorCode}
@@ -154,20 +139,26 @@ function App() {
               }}
             />
           )}
-
+          {auth.view === "register" && (
+            <RegisterForm
+              name={auth.name}
+              onNameChange={auth.setName}
+              onEmailChange={auth.setEmail}
+              onPasswordChange={auth.setPassword}
+              onRegister={auth.handleRegister}
+            />
+          )}
           {auth.view === "forgot" && (
             <ForgotPasswordForm
               onEmailChange={auth.setEmail}
               onSubmit={auth.handleForgotPassword}
             />
           )}
-
           {auth.view === "reset-password" && (
             <ResetPasswordForm
               newPassword={auth.newPassword}
-              setNewPassword={auth.setNewPassword}
+              onPasswordChange={auth.setNewPassword}
               onSubmit={auth.handleResetPassword}
-              onBackToLogin={() => auth.setView("login")}
             />
           )}
         </div>

@@ -5,7 +5,7 @@ const authenticationToken = require("../middleware/authentication");
 const { authLimitter } = require("../middleware/rateLimiter");
 const { validateRegister, validateLogin } = require("../middleware/validator");
 const authController = require("../controllers/auth.controller");
-const { userLoginLimiter } = require("../middleware/userRateLimiter");
+const {userLoginLimiter} = require("../middleware/userRateLimiter");
 
 require("../config/passport");
 
@@ -16,13 +16,8 @@ router.post(
   authController.register,
 );
 
-router.post(
-  "/login",
-  authLimitter,
-  userLoginLimiter,
-  validateLogin,
-  authController.login,
-);
+
+router.post("/login", authLimitter,userLoginLimiter, validateLogin, authController.login);
 router.post("/logout", authController.logout);
 router.get("/verify-email", authController.verifyEmail);
 router.get(
@@ -35,16 +30,18 @@ router.get(
 router.get(
   "/google/callback",
   passport.authenticate("google", {
-    failureRedirect: `${process.env.CLIENT_URL || process.env.FRONTEND_URL || "http://localhost:3000"}?error=oauth_failed`,
+    failureRedirect: "http://localhost:3000?error=oauth_failed",
     session: false,
   }),
   authController.googleCallback,
 );
-
-
 router.post("/2fa/verify-login", authController.verifyTwoFactorLogin);
 router.post("/2fa/setup", authenticationToken, authController.setupTwoFactor);
 router.post("/2fa/enable", authenticationToken, authController.enableTwoFactor);
-router.post("/2fa/disable",authenticationToken,authController.disableTwoFactor,);
+router.post(
+  "/2fa/disable",
+  authenticationToken,
+  authController.disableTwoFactor,
+);
 
 module.exports = router;

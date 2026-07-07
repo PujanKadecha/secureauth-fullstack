@@ -1,16 +1,8 @@
 import axios from "axios";
 
-const isLocalhost = typeof window !== "undefined" && ["localhost", "127.0.0.1"].includes(window.location.hostname);
-
-export const API_BASE_URL = isLocalhost
-  ? process.env.REACT_APP_API_URL || "http://localhost:5050/api"
-  : process.env.REACT_APP_API_URL || "https://secureauth-backend-4grz.onrender.com/api";
-
-const REFRESH_URL = `${API_BASE_URL.replace(/\/api$/, "")}/api/users/refresh`;
-
 const API = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 20000,
+  baseURL: "http://127.0.0.1:5050/api",
+  timeout: 10000,
 });
 
 API.interceptors.request.use(
@@ -41,9 +33,12 @@ API.interceptors.response.use(
         const refreshToken = localStorage.getItem("refreshToken");
         if (!refreshToken) throw new Error("No refresh token");
 
-        console.log(" Refreshing token...");
+        console.log("🔄 Refreshing token...");
 
-        const res = await axios.post(REFRESH_URL, { refreshToken });
+        const res = await axios.post(
+          "http://127.0.0.1:5050/api/users/refresh",
+          { refreshToken },
+        );
 
         console.log(" Token refreshed!");
 
