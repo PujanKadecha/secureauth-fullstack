@@ -35,7 +35,7 @@ router.get(
 router.get(
   "/google/callback",
   passport.authenticate("google", {
-    failureRedirect: "http://localhost:3000?error=oauth_failed",
+    failureRedirect: `${process.env.CLIENT_URL || process.env.FRONTEND_URL || "http://localhost:3000"}?error=oauth_failed`,
     session: false,
   }),
   authController.googleCallback,

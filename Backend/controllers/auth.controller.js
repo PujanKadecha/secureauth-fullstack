@@ -45,6 +45,7 @@ exports.googleCallback = catchAsync(async (req, res) => {
     },
   );
 
+  const frontendUrl = process.env.CLIENT_URL || process.env.FRONTEND_URL || "http://localhost:3000";
   const userData = encodeURIComponent(
     JSON.stringify({
       id: user._id,
@@ -55,7 +56,7 @@ exports.googleCallback = catchAsync(async (req, res) => {
   );
 
   return res.redirect(
-    `http://localhost:3000?token=${accessToken}&refresh=${refreshToken}&user=${userData}`,
+    `${frontendUrl}?token=${accessToken}&refresh=${refreshToken}&user=${userData}`,
   );
 });
 

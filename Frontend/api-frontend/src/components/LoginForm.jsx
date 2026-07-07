@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "../api";
+
 function LoginForm({ onEmailChange, onPasswordChange, onLogin }) {
   return (
     <div className="form-layout">
@@ -28,9 +30,9 @@ function LoginForm({ onEmailChange, onPasswordChange, onLogin }) {
       </div>
       <button
         type="button"
-        onClick={() =>
-          (window.location.href = "http://127.0.0.1:5050/api/auth/google")
-        }
+        onClick={() => {
+          window.location.href = `${API_BASE_URL}/auth/google`;
+        }}
         className="btn btn-google"
       >
         Sign in with Google

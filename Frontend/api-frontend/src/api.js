@@ -1,7 +1,9 @@
 import axios from "axios";
 
+export const API_BASE_URL = process.env.REACT_APP_API_URL || "https://secureauth-backend-4grz.onrender.com/api";
+
 const API = axios.create({
-  baseURL: "https://secureauth-backend-4grz.onrender.com/api",
+  baseURL: API_BASE_URL,
   timeout: 10000,
 });
 
