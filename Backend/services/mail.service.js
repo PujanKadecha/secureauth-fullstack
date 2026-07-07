@@ -3,10 +3,12 @@ const ejs = require("ejs");
 const path = require("path");
 require("dotenv").config();
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = process.env.RESEND_API_KEY
+  ? new Resend(process.env.RESEND_API_KEY)
+  : null;
 
 const sendMail = async ({ from, to, subject, html }) => {
-  if (!process.env.RESEND_API_KEY) {
+  if (!resend) {
     throw new Error("Resend API key is not configured");
   }
 
@@ -57,7 +59,6 @@ const sendPasswordResetEmail = async (user, token) => {
 };
 
 module.exports = {
-  transporter,
   sendMail,
   sendVerificationEmail,
   sendPasswordResetEmail,
