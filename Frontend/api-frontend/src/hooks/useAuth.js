@@ -14,8 +14,6 @@ export function useAuth() {
   const [errorMsg, setErrorMsg] = useState("");
   const [activeResetToken, setActiveResetToken] = useState("");
 
-  const [allUsers, setAllUsers] = useState("");
-  const [activityLogs, setActivityLogs] = useState("");
   const [twoFactorCode, setTwoFactorCode] = useState("");
   const [tempUserId, setTempUserId] = useState("");
   const [isSettingUp2FA, setIsSettingUp2FA] = useState(false);
@@ -197,8 +195,6 @@ export function useAuth() {
     } finally {
       localStorage.clear();
       setUser(null);
-      setAllUsers([]);
-      setActivityLogs([]);
       setView("login");
       setMessage("Logged out successfully.");
     }
