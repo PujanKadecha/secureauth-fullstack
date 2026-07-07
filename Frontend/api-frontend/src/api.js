@@ -2,7 +2,7 @@ import axios from "axios";
 dotenv.config();
 
 const API = axios.create({
-  baseURL: process.env.VITE_API_URL,
+  baseURL: "https://secureauth-backend-4grz.onrender.com/api",
   timeout: 10000,
 });
 
