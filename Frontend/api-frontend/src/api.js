@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://127.0.0.1:5050/api",
+  baseURL: "https://secureauth-backend-wpzt.onrender.com/api",
   timeout: 10000,
 });
 
@@ -36,7 +36,7 @@ API.interceptors.response.use(
         console.log("🔄 Refreshing token...");
 
         const res = await axios.post(
-          "http://127.0.0.1:5050/api/users/refresh",
+          "https://secureauth-backend-wpzt.onrender.com/api/users/refresh",
           { refreshToken },
         );
 
