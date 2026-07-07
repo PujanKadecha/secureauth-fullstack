@@ -2,10 +2,16 @@ const authService = require("../services/auth.service");
 const catchAsync = require("../utils/catchAsync");
 
 exports.register = catchAsync(async (req, res) => {
-  await authService.register(req.body);
+  const result = await authService.register(req.body);
 
   res.status(201).json({
     message: "Registration done! Please check your email for verification.",
+    user: {
+      id: result._id,
+      name: result.name,
+      email: result.email,
+      role: result.role,
+    },
   });
 });
 

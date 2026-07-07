@@ -4,12 +4,12 @@ const path = require("path");
 require("dotenv").config();
 
 const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: process.env.EMAIL_PORT,
+  host: process.env.EMAIL_HOST || "smtp.gmail.com",
+  port: Number(process.env.EMAIL_PORT || 465),
   secure: true,
-  connectionTimeout: 5000,
-  greetingTimeout: 5000,
-  socketTimeout: 5000,
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 10000,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASSWORD,
@@ -17,6 +17,10 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendMail = async ({ from, to, subject, html }) => {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+    throw new Error("Email credentials are not configured");
+  }
+
   return transporter.sendMail({ from, to, subject, html });
 };
 
