@@ -6,6 +6,8 @@ export const API_BASE_URL = isLocalhost
   ? process.env.REACT_APP_API_URL || "http://localhost:5050/api"
   : process.env.REACT_APP_API_URL || "https://secureauth-backend-4grz.onrender.com/api";
 
+const REFRESH_URL = `${API_BASE_URL.replace(/\/api$/, "")}/api/users/refresh`;
+
 const API = axios.create({
   baseURL: API_BASE_URL,
   timeout: 20000,
@@ -41,10 +43,7 @@ API.interceptors.response.use(
 
         console.log(" Refreshing token...");
 
-        const res = await axios.post(
-          "https://secureauth-backend-42gp.onrender.com/api/users/refresh",
-          { refreshToken },
-        );
+        const res = await axios.post(REFRESH_URL, { refreshToken });
 
         console.log(" Token refreshed!");
 
