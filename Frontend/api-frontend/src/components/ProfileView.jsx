@@ -23,7 +23,7 @@ function ProfileView({
         <strong>System ID Key:</strong> {user.id}
       </p>
       <p className="profile-info-text">
-        <strong>Assigned Role:</strong> {user.role || "user"}
+        <strong>Assigned Role:</strong> {user.role || "User"}
       </p>
       <p className="profile-info-text">
         <strong>Two-Factor Status: </strong>
