@@ -13,14 +13,26 @@ const swaggerSpec = require("./config/swagger");
 const securityMiddleware = require("./middleware/security.js");
 const sanitizeInput = require("./middleware/sanitize.js");
 const PORT = process.env.PORT;
-// const allowedOrigins = [
-//   process.env.CLIENT_URL,
-//   process.env.FRONTEND_URL,
-// ].filter(Boolean);
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  process.env.FRONTEND_URL,
+  "https://secureauth-ivory.vercel.app",
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+].filter(Boolean);
 
 app.use(
   cors({
-    origin: [process.env.CLIENT_URL, process.env.FRONTEND_URL],
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
