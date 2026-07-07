@@ -166,7 +166,7 @@ export function useAuth() {
       setEmail("");
       setPassword("");
     } catch (err) {
-      console.log(err.response?.data);
+      console.log("Full Error",err.response);
       setErrorMsg(
         err.response?.data?.message ||
           err.response?.data?.error ||
