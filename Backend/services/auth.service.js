@@ -24,7 +24,11 @@ const register = async ({ name, email, password }) => {
     verificationToken: emailToken,
   });
 
-  await mailService.sendVerificationEmail(newUser, emailToken);
+  try {
+    await mailService.sendVerificationEmail(newUser, emailToken);
+  } catch (mailError) {
+    console.error("Verification email could not be sent:", mailError);
+  }
 
   await activityService.logActivity({
     userId: newUser._id,

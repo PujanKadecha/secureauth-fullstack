@@ -166,12 +166,12 @@ export function useAuth() {
       setEmail("");
       setPassword("");
     } catch (err) {
-      console.log("Full Error",err.response);
-      setErrorMsg(
-        err.response?.data?.message ||
-          err.response?.data?.error ||
-          "Registration failed",
-      );
+      const backendMessage = err.response?.data?.message || err.response?.data?.error;
+      if (backendMessage) {
+        setMessage(backendMessage);
+      } else {
+        setErrorMsg("Registration failed. Please try again.");
+      }
     }
   };
 
