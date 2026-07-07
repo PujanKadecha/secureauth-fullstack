@@ -1,5 +1,8 @@
 const express = require("express");
 const app = express();
+const dotenv = require("dotenv");
+dotenv.config();
+
 const connectDB = require("./config/db");
 const { generalLimiter } = require("./middleware/rateLimiter.js");
 const cors = require("cors");
@@ -7,10 +10,8 @@ const passport = require("./config/passport.js");
 const errorHandler = require("./middleware/errorHandler.js");
 const swaggerUI = require("swagger-ui-express");
 const swaggerSpec = require("./config/swagger");
-const dotenv = require("dotenv");
-const securityMiddleware = require ("./middleware/security.js");
+const securityMiddleware = require("./middleware/security.js");
 const sanitizeInput = require("./middleware/sanitize.js");
-dotenv.config();
 const PORT = process.env.PORT;
 const allowedOrigins = [
   process.env.CLIENT_URL,
