@@ -24,11 +24,14 @@ const register = async ({ name, email, password }) => {
     verificationToken: emailToken,
   });
 
-  try {
-    await mailService.sendVerificationEmail(newUser, emailToken);
-  } catch (mailError) {
+  Promise.race([
+    mailService.sendVerificationEmail(newUser, emailToken),
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Email send timed out")), 5000),
+    ),
+  ]).catch((mailError) => {
     console.error("Verification email could not be sent:", mailError);
-  }
+  });
 
   await activityService.logActivity({
     userId: newUser._id,
