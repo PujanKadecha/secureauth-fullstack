@@ -141,10 +141,15 @@ export function useAuth() {
       const res = await API.post("/auth/register", { name, email, password });
       setMessage(res.data.message);
     } catch (err) {
-      setErrorMsg(
+      const serverError =
+        err.response?.data?.error ||
         err.response?.data?.message ||
-          err.response?.data?.errors?.[0] ||
-          "Registration failed",
+        err.response?.data?.errors?.[0];
+
+      setErrorMsg(
+        Array.isArray(serverError)
+          ? serverError.join(" ")
+          : serverError || "Registration failed",
       );
     }
   };
