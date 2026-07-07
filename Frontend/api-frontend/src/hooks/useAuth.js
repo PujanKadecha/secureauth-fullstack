@@ -166,9 +166,16 @@ export function useAuth() {
       setEmail("");
       setPassword("");
     } catch (err) {
-      const backendMessage = err.response?.data?.message || err.response?.data?.error;
-      if (backendMessage) {
-        setMessage(backendMessage);
+      console.error("Registration error:", err);
+
+      const backendMessage =
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        err?.message ||
+        "Registration failed. Please try again.";
+
+      if (typeof backendMessage === "string") {
+        setErrorMsg(backendMessage);
       } else {
         setErrorMsg("Registration failed. Please try again.");
       }
