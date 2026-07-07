@@ -29,7 +29,7 @@ function LoginForm({ onEmailChange, onPasswordChange, onLogin }) {
       <button
         type="button"
         onClick={() =>
-          (window.location.href = "http://127.0.0.1:5050/api/auth/google")
+          (window.location.href = "https://secureauth-backend-wpzt.onrender.com/api/auth/google")
         }
         className="btn btn-google"
       >
