@@ -1,27 +1,21 @@
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 const ejs = require("ejs");
 const path = require("path");
 require("dotenv").config();
 
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST || "smtp.gmail.com",
-  port: Number(process.env.EMAIL_PORT || 465),
-  secure: true,
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const sendMail = async ({ from, to, subject, html }) => {
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
-    throw new Error("Email credentials are not configured");
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error("Resend API key is not configured");
   }
 
-  return transporter.sendMail({ from, to, subject, html });
+  return resend.emails.send({
+    from,
+    to,
+    subject,
+    html,
+  });
 };
 
 
@@ -39,7 +33,7 @@ const sendVerificationEmail = async (user, token) => {
   });
 
   return sendMail({
-    from: '"SecureAuth" <no-reply@secureauth.com>',
+    from: process.env.EMAIL_FROM || "onboarding@resend.dev",
     to: user.email,
     subject: "Verify Your Email Address",
     html
@@ -55,7 +49,7 @@ const sendPasswordResetEmail = async (user, token) => {
   });
 
   return sendMail({
-    from: '"SecureAuth Security" <security@secureauth.com>',
+    from: process.env.EMAIL_FROM || "onboarding@resend.dev",
     to: user.email,
     subject: "Reset Your Password",
     html
