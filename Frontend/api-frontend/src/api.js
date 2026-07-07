@@ -1,5 +1,4 @@
 import axios from "axios";
-dotenv.config();
 
 const API = axios.create({
   baseURL: "https://secureauth-backend-4grz.onrender.com/api",
