@@ -1,6 +1,10 @@
 import axios from "axios";
 
-export const API_BASE_URL = process.env.REACT_APP_API_URL || "https://secureauth-backend-4grz.onrender.com/api";
+const isLocalhost = typeof window !== "undefined" && ["localhost", "127.0.0.1"].includes(window.location.hostname);
+
+export const API_BASE_URL = isLocalhost
+  ? process.env.REACT_APP_API_URL || "http://localhost:5050/api"
+  : process.env.REACT_APP_API_URL || "https://secureauth-backend-4grz.onrender.com/api";
 
 const API = axios.create({
   baseURL: API_BASE_URL,
