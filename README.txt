@@ -175,4 +175,3 @@ A few production issues came up during deployment that are worth documenting for
 6. **Google OAuth "invalid request" errors** are almost always caused by a mismatch between `GOOGLE_CALLBACK_URL` and the **Authorized redirect URIs** registered in Google Cloud Console — must match character-for-character, including protocol and trailing slashes.
 
 ---
-
