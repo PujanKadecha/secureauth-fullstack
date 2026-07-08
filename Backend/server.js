@@ -1,3 +1,6 @@
+const dotenv = require("dotenv");
+dotenv.config();
+
 const express = require("express");
 const app = express();
 const connectDB = require("./config/db");
@@ -5,10 +8,8 @@ const { generalLimiter } = require("./middleware/rateLimiter.js");
 const cors = require("cors");
 const passport = require("./config/passport.js");
 const errorHandler = require("./middleware/errorHandler.js");
-const dotenv = require("dotenv");
 const securityMiddleware = require ("./middleware/security.js");
 const sanitizeInput = require("./middleware/sanitize.js");
-dotenv.config();
 const PORT = process.env.PORT;
 
 app.use(
