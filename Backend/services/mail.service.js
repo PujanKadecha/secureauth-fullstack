@@ -1,23 +1,19 @@
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 const ejs = require("ejs");
 const path = require("path");
 require("dotenv").config();
 
-const emailPort = Number(process.env.EMAIL_PORT) || 587;
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: emailPort,
-  secure: emailPort === 465,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD,
-  },
-  connectionTimeout: 10000,
-});
+
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev";
 
 const sendMail = async ({ from, to, subject, html }) => {
-  return transporter.sendMail({ from, to, subject, html });
+  const { data, error } = await resend.emails.send({ from, to, subject, html });
+  if (error) {
+    throw new Error(error.message || "Failed to send email via Resend");
+  }
+  return data;
 };
 
 const renderEmailTemplate = async (templateName, data) => {
@@ -34,7 +30,7 @@ const sendVerificationEmail = async (user, token) => {
   });
 
   return sendMail({
-    from: '"SecureAuth" <no-reply@secureauth.com>',
+    from: `SecureAuth <${FROM_EMAIL}>`,
     to: user.email,
     subject: "Verify Your Email Address",
     html,
@@ -50,7 +46,7 @@ const sendPasswordResetEmail = async (user, token) => {
   });
 
   return sendMail({
-    from: '"SecureAuth Security" <security@secureauth.com>',
+    from: `SecureAuth Security <${FROM_EMAIL}>`,
     to: user.email,
     subject: "Reset Your Password",
     html,
@@ -58,7 +54,6 @@ const sendPasswordResetEmail = async (user, token) => {
 };
 
 module.exports = {
-  transporter,
   sendMail,
   sendVerificationEmail,
   sendPasswordResetEmail,
