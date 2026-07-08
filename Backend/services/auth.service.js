@@ -24,7 +24,11 @@ const register = async ({ name, email, password }) => {
     verificationToken: emailToken,
   });
 
-  await mailService.sendVerificationEmail(newUser, emailToken);
+  try {
+    await mailService.sendVerificationEmail(newUser, emailToken);
+  } catch (emailErr) {
+    console.error("Failed to send verification email:", emailErr.message);
+  }
 
   await activityService.logActivity({
     userId: newUser._id,
@@ -56,7 +60,7 @@ const login = async ({ email, password }) => {
     user.failedLoginAttempts = (user.failedLoginAttempts || 0) + 1;
 
     if (user.failedLoginAttempts >= 5) {
-      user.lockUntil = Date.now() + 15 * 60 * 1000; 
+      user.lockUntil = Date.now() + 15 * 60 * 1000;
       await user.save();
       throw new AppError(
         "Too many failed attempts. Account locked for 15 minutes.",
