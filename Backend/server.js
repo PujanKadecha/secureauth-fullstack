@@ -3,6 +3,7 @@ dotenv.config();
 
 const express = require("express");
 const app = express();
+app.set("trust proxy", true);
 const connectDB = require("./config/db");
 const { generalLimiter } = require("./middleware/rateLimiter.js");
 const cors = require("cors");
