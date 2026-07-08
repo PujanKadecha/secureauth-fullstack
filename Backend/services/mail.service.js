@@ -2,7 +2,7 @@ const axios = require("axios");
 const ejs = require("ejs");
 const path = require("path");
 require("dotenv").config();
-
+console.log("BREVO_API_KEY loaded:", !!process.env.BREVO_API_KEY);
 const BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
 
 const sendMail = async ({ fromName, fromEmail, to, subject, html }) => {
