@@ -43,8 +43,10 @@ function AdminView({
           </thead>
           <tbody>
             {allUsers.map((u) => {
-              const isLocked =
-                u.lockUntil && new Date(u.lockUntil) > new Date();
+              const currentUserId = user?.id || user?._id;
+              const isLocked = Boolean(
+                u.lockUntil && new Date(u.lockUntil).getTime() > Date.now(),
+              );
               return (
                 <tr key={u._id} style={{ borderBottom: "1px solid #e4e4e7" }}>
                   <td style={{ padding: "10px", fontWeight: "bold" }}>
@@ -62,9 +64,8 @@ function AdminView({
                     )}
                   </td>
                   <td style={{ padding: "10px", textAlign: "center" }}>
-                    {u._id !== user.id && (
+                    {u._id !== currentUserId && (
                       <>
-                        
                         <select
                           onChange={(e) => onChangeRole(u._id, e.target.value)}
                           defaultValue={u.role}
@@ -79,7 +80,6 @@ function AdminView({
                           <option value="admin">Admin</option>
                         </select>
 
-                       
                         {isLocked && (
                           <button
                             onClick={() => onUnlockUser(u._id)}
@@ -94,7 +94,6 @@ function AdminView({
                           </button>
                         )}
 
-                       
                         <button
                           onClick={() => onDeleteUser(u._id)}
                           className="btn btn-danger"
