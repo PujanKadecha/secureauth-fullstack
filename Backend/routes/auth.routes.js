@@ -5,7 +5,7 @@ const authenticationToken = require("../middleware/authentication");
 const { authLimitter } = require("../middleware/rateLimiter");
 const { validateRegister, validateLogin } = require("../middleware/validator");
 const authController = require("../controllers/auth.controller");
-const {userLoginLimiter} = require("../middleware/userRateLimiter");
+const { userLoginLimiter } = require("../middleware/userRateLimiter");
 
 require("../config/passport");
 
@@ -16,8 +16,13 @@ router.post(
   authController.register,
 );
 
-
-router.post("/login", authLimitter,userLoginLimiter, validateLogin, authController.login);
+router.post(
+  "/login",
+  authLimitter,
+  userLoginLimiter,
+  validateLogin,
+  authController.login,
+);
 router.post("/logout", authController.logout);
 router.get("/verify-email", authController.verifyEmail);
 router.get(
@@ -30,7 +35,8 @@ router.get(
 router.get(
   "/google/callback",
   passport.authenticate("google", {
-    failureRedirect: "https://secureauth-fullstack.vercel.app?error=oauth_failed",
+    failureRedirect:
+      "https://secureauth-fullstack.vercel.app?error=oauth_failed",
     session: false,
   }),
   authController.googleCallback,
