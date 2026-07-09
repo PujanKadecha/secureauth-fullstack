@@ -1,4 +1,4 @@
-function ResetPasswordForm({ newPassword, onPasswordChange, onSubmit }) {
+function ResetPasswordForm({ newPassword, onPasswordChange,newCongirmPassword,onConfirmPasswordChange, onSubmit }) {
   return (
     <form onSubmit={onSubmit} className="form-layout">
       <h3>Set a New Password</h3>
@@ -11,6 +11,14 @@ function ResetPasswordForm({ newPassword, onPasswordChange, onSubmit }) {
         required
         className="input-field"
         minLength={6}
+      />
+      <input
+        type="password"
+        placeholder="Confirm New Password"
+        value={newCongirmPassword}
+        onChange={(e) => onConfirmPasswordChange(e.target.value)}
+        required
+        className="input-field"
       />
       <button type="submit" className="btn btn-primary">
         Update Password

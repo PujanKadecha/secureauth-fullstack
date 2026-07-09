@@ -7,6 +7,7 @@ export function useAuth() {
   const [password, setPassword] = useState("");
   const [editName, setEditName] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [newConfirmPassword,setNewConfirmPassword] = useState("");
 
   const [view, setView] = useState("login");
   const [user, setUser] = useState(null);
@@ -185,6 +186,7 @@ export function useAuth() {
     try {
       const res = await API.post(`/users/reset-password/${activeResetToken}`, {
         password: newPassword,
+        confirmPassword : newConfirmPassword
       });
       setMessage(res.data.message || "Password updated");
       setNewPassword("");
@@ -318,6 +320,8 @@ export function useAuth() {
     setEditName,
     newPassword,
     setNewPassword,
+    newConfirmPassword,
+    setNewConfirmPassword,
     view,
     setView,
     user,

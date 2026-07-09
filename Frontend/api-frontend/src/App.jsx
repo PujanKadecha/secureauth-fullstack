@@ -162,7 +162,8 @@ function App() {
             <ResetPasswordForm
               newPassword={auth.newPassword}
               onPasswordChange={auth.setNewPassword}
-              onConfirmPasswordChange={auth.newConfirmPassword}
+              newCongirmPassword = {auth.newConfirmPassword}
+              onConfirmPasswordChange={auth.setNewConfirmPassword}
               onSubmit={auth.handleResetPassword}
             />
           )}
