@@ -3,6 +3,7 @@ import axios from "axios";
 const API = axios.create({
   baseURL: "https://secureauth-backend-wpzt.onrender.com/api",
   timeout: 10000,
+  withCredentials: true, 
 });
 
 API.interceptors.request.use(
@@ -30,14 +31,12 @@ API.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const refreshToken = localStorage.getItem("refreshToken");
-        if (!refreshToken) throw new Error("No refresh token");
-
         console.log("🔄 Refreshing token...");
 
         const res = await axios.post(
           "https://secureauth-backend-wpzt.onrender.com/api/users/refresh",
-          { refreshToken },
+          {},
+          { withCredentials: true },
         );
 
         console.log(" Token refreshed!");

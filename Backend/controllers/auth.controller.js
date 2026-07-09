@@ -1,5 +1,6 @@
 const authService = require("../services/auth.service");
 const catchAsync = require("../utils/catchAsync");
+const { refreshCookieOptions } = require("../utils/cookieOptions");
 
 exports.register = catchAsync(async (req, res) => {
   await authService.register(req.body);
@@ -20,11 +21,18 @@ exports.login = catchAsync(async (req, res) => {
     });
   }
 
-  return res.status(200).json(result);
+  res.cookie("refreshToken", result.refreshToken, refreshCookieOptions);
+
+  return res.status(200).json({
+    accessToken: result.accessToken,
+    user: result.user,
+  });
 });
 
 exports.logout = catchAsync(async (req, res) => {
-  await authService.logout(req.body.token);
+  const token = req.cookies?.refreshToken;
+  await authService.logout(token);
+  res.clearCookie("refreshToken", { path: "/api" });
   return res.json({ message: "Logout Successfully" });
 });
 
@@ -38,6 +46,8 @@ exports.googleCallback = catchAsync(async (req, res) => {
     req.user,
   );
 
+  res.cookie("refreshToken", refreshToken, refreshCookieOptions);
+
   const userData = encodeURIComponent(
     JSON.stringify({
       id: user._id,
@@ -48,13 +58,19 @@ exports.googleCallback = catchAsync(async (req, res) => {
   );
 
   return res.redirect(
-    `https://secureauth-fullstack.vercel.app?token=${accessToken}&refresh=${refreshToken}&user=${userData}`,
+    `https://secureauth-fullstack.vercel.app?token=${accessToken}&user=${userData}`,
   );
 });
 
 exports.verifyTwoFactorLogin = catchAsync(async (req, res) => {
   const result = await authService.verifyTwoFactorLogin(req.body);
-  return res.status(200).json(result);
+
+  res.cookie("refreshToken", result.refreshToken, refreshCookieOptions);
+
+  return res.status(200).json({
+    accessToken: result.accessToken,
+    user: result.user,
+  });
 });
 
 exports.setupTwoFactor = catchAsync(async (req, res) => {

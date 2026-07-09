@@ -61,7 +61,7 @@ exports.updateUser = catchAsync(async (req, res) => {
 
 exports.refreshToken = catchAsync(async (req, res) => {
   const accessToken = await userService.refreshAccessToken(
-    req.body.refreshToken,
+    req.cookies?.refreshToken,
   );
   return res.json({ accessToken });
 });
