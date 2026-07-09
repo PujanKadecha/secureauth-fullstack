@@ -1,6 +1,6 @@
 const authService = require("../services/auth.service");
 const catchAsync = require("../utils/catchAsync");
-const { refreshCookieOptions } = require("../utils/cookieOptions");
+const { refreshCookieOptions } = require("../utils/cookieoptions");
 
 exports.register = catchAsync(async (req, res) => {
   await authService.register(req.body);
