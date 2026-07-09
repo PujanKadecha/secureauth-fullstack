@@ -32,7 +32,7 @@ exports.forgotPassword = catchAsync(async (req, res) => {
 });
 
 exports.resetPassword = catchAsync(async (req, res) => {
-  await userService.resetPassword(req.params.token, req.body.password);
+  await userService.resetPassword(req.params.token, req.body.newPassword);
   return res.json({ message: "Password updated successfully!" });
 });
 

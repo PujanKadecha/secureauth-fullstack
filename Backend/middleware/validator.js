@@ -59,7 +59,7 @@ const resetPasswordSchema = Joi.object({
       "string.pattern.base":
         "Password must be 6+ chars with uppercase, lowercase, number & symbol",
     }),
-  newConfirmPassword: Joi.string().valid(Joi.ref("password")).required().messages({
+  newConfirmPassword: Joi.string().valid(Joi.ref("newPassword")).required().messages({
     "any.only": "Passwords do not match",
     "any.required": "Confirm password is required",
   }),

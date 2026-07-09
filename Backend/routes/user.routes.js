@@ -25,7 +25,7 @@ router.delete(
   userController.deleteUser,
 );
 router.post("/forgot-password", userController.forgotPassword);
-router.post("/reset-password/:token", userController.resetPassword,validateResetPassword);
+router.post("/reset-password/:token", validateResetPassword, userController.resetPassword);
 router.put("/profile", authenticationToken, userController.updateProfile);
 router.put("/:id", authenticationToken, userController.updateUser);
 router.post("/refresh", userController.refreshToken);

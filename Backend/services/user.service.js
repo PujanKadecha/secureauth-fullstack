@@ -65,10 +65,6 @@ const forgotPassword = async (email) => {
 };
 
 const resetPassword = async (token, password) => {
-  if (!password || password.length < 6) {
-    throw new AppError("Password Must be more then 6 words", 400);
-  }
-
   const user = await User.findOne({
     resetPasswordToken: token,
     resetPasswordExpire: { $gt: Date.now() },
