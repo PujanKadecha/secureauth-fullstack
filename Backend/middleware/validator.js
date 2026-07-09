@@ -10,6 +10,13 @@ const registerSchema = Joi.object({
       "Password must be 6+ chars with uppercase, lowercase, number & symbol",
     )
     .required(),
+  confirmPassword: Joi.string()
+    .valid(Joi.ref("password"))
+    .required()
+    .messages({
+      "any.only": "Passwords do not match",
+      "any.required": "Confirm password is required",
+    }),
 });
 
 const loginSchema = Joi.object({

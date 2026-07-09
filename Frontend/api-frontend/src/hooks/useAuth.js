@@ -20,6 +20,7 @@ export function useAuth() {
   const [qrCodeUrl, setQqCodeUrl] = useState("");
   const [twoFactorSecret, setTwoFactorSecret] = useState("");
   const [twoFactorSetupCode, setTwoFactorSetupCode] = useState("");
+  const [confirmPassword,setConfirmPassword] = useState("");
 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
@@ -135,9 +136,24 @@ export function useAuth() {
   const handleRegister = async (e) => {
     e.preventDefault();
     clearMessages();
+
+    if (password !== confirmPassword) {
+      setErrorMsg("Passwords do not match.");
+      return;
+    }
+
     try {
-      const res = await API.post("/auth/register", { name, email, password });
+      const res = await API.post("/auth/register", {
+        name,
+        email,
+        password,
+        confirmPassword,
+      });
       setMessage(res.data.message);
+      setName("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
     } catch (err) {
       const serverError =
         err.response?.data?.error ||
@@ -296,6 +312,8 @@ export function useAuth() {
     setEmail,
     password,
     setPassword,
+    confirmPassword,
+    setConfirmPassword,
     editName,
     setEditName,
     newPassword,
@@ -327,5 +345,6 @@ export function useAuth() {
     handleSetup2FA,
     handleEnable2FA,
     handleDisable2FA,
+    setConfirmPassword,
   };
 }

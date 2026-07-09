@@ -7,10 +7,14 @@ const twoFactorService = require("./twoFactor.service");
 const activityService = require("./activity.service");
 const AppError = require("../utils/AppError");
 
-const register = async ({ name, email, password }) => {
+const register = async ({ name, email, password, confirmPassword }) => {
   const userExists = await User.findOne({ email });
   if (userExists) {
     throw new AppError("User already exists", 400);
+  }
+
+  if (password !== confirmPassword) {
+    throw new AppError("Passwords do not match", 400);
   }
 
   const salt = await bcrypt.genSalt(10);

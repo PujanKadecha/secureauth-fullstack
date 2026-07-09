@@ -1,9 +1,13 @@
 function RegisterForm({
   name,
+  email,
+  password,
+  confirmPassword,
   onNameChange,
   onEmailChange,
   onPasswordChange,
   onRegister,
+  onConfirmPasswordChange,
 }) {
   return (
     <form onSubmit={onRegister} className="form-layout">
@@ -19,6 +23,7 @@ function RegisterForm({
       <input
         type="email"
         placeholder="Email Address"
+        value={email}
         onChange={(e) => onEmailChange(e.target.value)}
         required
         className="input-field"
@@ -26,7 +31,16 @@ function RegisterForm({
       <input
         type="password"
         placeholder="Password"
+        value={password}
         onChange={(e) => onPasswordChange(e.target.value)}
+        required
+        className="input-field"
+      />
+      <input
+        type="password"
+        placeholder="Confirm Password"
+        value={confirmPassword}
+        onChange={(e) => onConfirmPasswordChange(e.target.value)}
         required
         className="input-field"
       />

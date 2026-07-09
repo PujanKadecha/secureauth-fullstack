@@ -142,9 +142,13 @@ function App() {
           {auth.view === "register" && (
             <RegisterForm
               name={auth.name}
+              email={auth.email}
+              password={auth.password}
+              confirmPassword={auth.confirmPassword}
               onNameChange={auth.setName}
               onEmailChange={auth.setEmail}
               onPasswordChange={auth.setPassword}
+              onConfirmPasswordChange={auth.setConfirmPassword}
               onRegister={auth.handleRegister}
             />
           )}
@@ -158,6 +162,7 @@ function App() {
             <ResetPasswordForm
               newPassword={auth.newPassword}
               onPasswordChange={auth.setNewPassword}
+              onConfirmPasswordChange={auth.newConfirmPassword}
               onSubmit={auth.handleResetPassword}
             />
           )}
