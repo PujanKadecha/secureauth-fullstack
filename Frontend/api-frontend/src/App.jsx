@@ -2,6 +2,7 @@ import { useAuth } from "./hooks/useAuth";
 import { useAdmin } from "./hooks/useAdmin";
 import "./App.css";
 
+import { Analytics } from "@vercel/analytics/react"
 import LoginForm from "./components/LoginForm";
 import TwoFactorLoginForm from "./components/TwoFactorLoginForm";
 import RegisterForm from "./components/RegisterForm";
@@ -19,7 +20,7 @@ function App() {
   return (
     <div className="app-container">
       <h1 className="app-title">Auth API Dashboard</h1>
-
+      <Analytics />
       {auth.message && <div className="alert-success">{auth.message}</div>}
       {auth.errorMsg && <div className="alert-error">{auth.errorMsg}</div>}
 
