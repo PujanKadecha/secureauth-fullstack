@@ -1,6 +1,8 @@
 const authService = require("../services/auth.service");
 const catchAsync = require("../utils/catchAsync");
+const AppError = require("../utils/AppError");
 const { refreshCookieOptions } = require("../utils/cookieoptions");
+const { createOAuthCode, consumeOAuthCode } = require("../utils/oauthCodeStore");
 
 exports.register = catchAsync(async (req, res) => {
   await authService.register(req.body);
@@ -48,18 +50,35 @@ exports.googleCallback = catchAsync(async (req, res) => {
 
   res.cookie("refreshToken", refreshToken, refreshCookieOptions);
 
-  const userData = encodeURIComponent(
-    JSON.stringify({
+  const code = createOAuthCode({
+    accessToken,
+    user: {
       id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
-    }),
-  );
+    },
+  });
 
   return res.redirect(
-    `https://secureauth-fullstack.vercel.app?token=${accessToken}&user=${userData}`,
+    `https://secureauth-fullstack.vercel.app?oauthCode=${code}`,
   );
+});
+
+exports.exchangeOAuthCode = catchAsync(async (req, res) => {
+  const { code } = req.body;
+
+  if (!code) {
+    throw new AppError("Missing OAuth code", 400);
+  }
+
+  const payload = consumeOAuthCode(code);
+
+  if (!payload) {
+    throw new AppError("Invalid or expired OAuth code", 400);
+  }
+
+  return res.status(200).json(payload);
 });
 
 exports.verifyTwoFactorLogin = catchAsync(async (req, res) => {

@@ -7,7 +7,7 @@ export function useAuth() {
   const [password, setPassword] = useState("");
   const [editName, setEditName] = useState("");
   const [newPassword, setNewPassword] = useState("");
-
+  
   const [view, setView] = useState("login");
   const [user, setUser] = useState(null);
   const [message, setMessage] = useState("");
@@ -20,8 +20,8 @@ export function useAuth() {
   const [qrCodeUrl, setQqCodeUrl] = useState("");
   const [twoFactorSecret, setTwoFactorSecret] = useState("");
   const [twoFactorSetupCode, setTwoFactorSetupCode] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [newConfirmPassword, setNewConfirmPassword] = useState("");
+  const [confirmPassword,setConfirmPassword] = useState("");
+  const [newConfirmPassword,setNewConfirmPassword] = useState("");
 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
@@ -33,22 +33,34 @@ export function useAuth() {
 
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
-    const token = queryParams.get("token");
-    const userDataStr = queryParams.get("user");
+    const oauthCode = queryParams.get("oauthCode");
     const oauthError = queryParams.get("error");
     const verifyToken = queryParams.get("verifyToken");
     const resetToken = queryParams.get("resetToken");
 
-    if (token && userDataStr) {
-      localStorage.setItem("accessToken", token);
-      const parsedUser = JSON.parse(decodeURIComponent(userDataStr));
-      localStorage.setItem("user", JSON.stringify(parsedUser));
-      setUser(parsedUser);
-      setMessage(
-        `Successfully authenticated via Google! Welcome, ${parsedUser.name}.`,
-      );
-      setView("dashboard");
+    if (oauthCode) {
       window.history.replaceState({}, document.title, "/");
+
+      const exchangeOAuthCode = async () => {
+        try {
+          const res = await API.post("/auth/google/exchange", {
+            code: oauthCode,
+          });
+          const { accessToken, user: googleUser } = res.data;
+          localStorage.setItem("accessToken", accessToken);
+          localStorage.setItem("user", JSON.stringify(googleUser));
+          setUser(googleUser);
+          setMessage(
+            `Successfully authenticated via Google! Welcome, ${googleUser.name}.`,
+          );
+          setView("dashboard");
+        } catch (err) {
+          setErrorMsg(
+            "Google authentication failed or expired. Please try again.",
+          );
+        }
+      };
+      exchangeOAuthCode();
     } else if (oauthError) {
       setErrorMsg(
         `Google authentication failed: ${decodeURIComponent(oauthError)}`,
@@ -186,9 +198,9 @@ export function useAuth() {
     try {
       const res = await API.post(`/users/reset-password/${activeResetToken}`, {
         newPassword,
-        newConfirmPassword,
+        newConfirmPassword
       });
-
+      
       setMessage(res.data.message || "Password updated");
       setNewPassword("");
       setNewConfirmPassword("");

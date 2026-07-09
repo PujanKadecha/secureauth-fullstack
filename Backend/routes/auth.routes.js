@@ -41,6 +41,7 @@ router.get(
   }),
   authController.googleCallback,
 );
+router.post("/google/exchange", authController.exchangeOAuthCode);
 router.post("/2fa/verify-login", authController.verifyTwoFactorLogin);
 router.post("/2fa/setup", authenticationToken, authController.setupTwoFactor);
 router.post("/2fa/enable", authenticationToken, authController.enableTwoFactor);
