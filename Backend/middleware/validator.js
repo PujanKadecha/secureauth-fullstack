@@ -6,18 +6,18 @@ const registerSchema = Joi.object({
   password: Joi.string()
     .min(6)
     .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/)
-    .message(
-      "Password must be 6+ chars with uppercase, lowercase, number & symbol",
-    )
-    .required(),
-  confirmPassword: Joi.string()
-    .valid(Joi.ref("password"))
     .required()
     .messages({
-      "any.only": "Passwords do not match",
-      "any.required": "Confirm password is required",
+      "string.min":
+        "Password must be 6+ chars with uppercase, lowercase, number & symbol",
+      "string.pattern.base":
+        "Password must be 6+ chars with uppercase, lowercase, number & symbol",
     }),
-}).unknown(true);
+  confirmPassword: Joi.string().valid(Joi.ref("password")).required().messages({
+    "any.only": "Passwords do not match",
+    "any.required": "Confirm password is required",
+  }),
+});
 
 const loginSchema = Joi.object({
   email: Joi.string().email().required().messages({
