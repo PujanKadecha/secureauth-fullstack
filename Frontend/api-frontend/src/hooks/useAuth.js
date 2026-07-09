@@ -345,6 +345,5 @@ export function useAuth() {
     handleSetup2FA,
     handleEnable2FA,
     handleDisable2FA,
-    setConfirmPassword,
   };
 }
