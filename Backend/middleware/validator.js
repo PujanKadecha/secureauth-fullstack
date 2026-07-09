@@ -17,7 +17,7 @@ const registerSchema = Joi.object({
       "any.only": "Passwords do not match",
       "any.required": "Confirm password is required",
     }),
-});
+}).unknown(true);
 
 const loginSchema = Joi.object({
   email: Joi.string().email().required().messages({
