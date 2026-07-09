@@ -3,7 +3,7 @@ const router = express.Router();
 const authenticationToken = require("../middleware/authentication");
 const authorizeRole = require("../middleware/authorize");
 const userController = require("../controllers/user.controller");
-const { validateRoleChange } = require("../middleware/validator");
+const { validateRoleChange,validateResetPassword } = require("../middleware/validator");
 
 router.get(
   "/",
@@ -24,7 +24,7 @@ router.delete(
   authorizeRole("admin"),
   userController.deleteUser,
 );
-router.post("/forgot-password", userController.forgotPassword);
+router.post("/forgot-password", userController.forgotPassword,validateResetPassword);
 router.post("/reset-password/:token", userController.resetPassword);
 router.put("/profile", authenticationToken, userController.updateProfile);
 router.put("/:id", authenticationToken, userController.updateUser);
