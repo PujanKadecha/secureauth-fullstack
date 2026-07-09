@@ -163,7 +163,7 @@ function App() {
               newPassword={auth.newPassword}
               onPasswordChange={auth.setNewPassword}
               newCongirmPassword = {auth.newConfirmPassword}
-              onConfirmPasswordChange={auth.setNewConfirmPassword}
+              onNewConfirmPasswordChange={auth.setNewConfirmPassword}
               onSubmit={auth.handleResetPassword}
             />
           )}

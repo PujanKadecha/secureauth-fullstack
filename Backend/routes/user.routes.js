@@ -24,8 +24,8 @@ router.delete(
   authorizeRole("admin"),
   userController.deleteUser,
 );
-router.post("/forgot-password", userController.forgotPassword,validateResetPassword);
-router.post("/reset-password/:token", userController.resetPassword);
+router.post("/forgot-password", userController.forgotPassword);
+router.post("/reset-password/:token", userController.resetPassword,validateResetPassword);
 router.put("/profile", authenticationToken, userController.updateProfile);
 router.put("/:id", authenticationToken, userController.updateUser);
 router.post("/refresh", userController.refreshToken);
