@@ -49,7 +49,7 @@ const roleChangeSchema = Joi.object({
 const validateRoleChange = validateBody(roleChangeSchema);
 
 const resetPasswordSchema = Joi.object({
-  password: Joi.string()
+  newPassword: Joi.string()
     .min(6)
     .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/)
     .required()
@@ -59,7 +59,7 @@ const resetPasswordSchema = Joi.object({
       "string.pattern.base":
         "Password must be 6+ chars with uppercase, lowercase, number & symbol",
     }),
-  confirmPassword: Joi.string().valid(Joi.ref("password")).required().messages({
+  newConfirmPassword: Joi.string().valid(Joi.ref("password")).required().messages({
     "any.only": "Passwords do not match",
     "any.required": "Confirm password is required",
   }),

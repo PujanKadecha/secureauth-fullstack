@@ -7,8 +7,7 @@ export function useAuth() {
   const [password, setPassword] = useState("");
   const [editName, setEditName] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [newConfirmPassword,setNewConfirmPassword] = useState("");
-
+  
   const [view, setView] = useState("login");
   const [user, setUser] = useState(null);
   const [message, setMessage] = useState("");
@@ -22,6 +21,7 @@ export function useAuth() {
   const [twoFactorSecret, setTwoFactorSecret] = useState("");
   const [twoFactorSetupCode, setTwoFactorSetupCode] = useState("");
   const [confirmPassword,setConfirmPassword] = useState("");
+  const [newConfirmPassword,setNewConfirmPassword] = useState("");
 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
@@ -183,13 +183,19 @@ export function useAuth() {
   const handleResetPassword = async (e) => {
     e.preventDefault();
     clearMessages();
+    if (newPassword !== newConfirmPassword) {
+      setErrorMsg("Passwords do not match.");
+      return;
+    }
     try {
       const res = await API.post(`/users/reset-password/${activeResetToken}`, {
-        password: newPassword,
-        confirmPassword : newConfirmPassword
+        newPassword,
+        newConfirmPassword
       });
+      
       setMessage(res.data.message || "Password updated");
       setNewPassword("");
+      setNewConfirmPassword("");
       setView("login");
       window.history.replaceState({}, document.title, "/");
     } catch (err) {
