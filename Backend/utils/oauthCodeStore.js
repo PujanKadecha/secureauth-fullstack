@@ -20,8 +20,7 @@ const createOAuthCode = async (payload) => {
 const consumeOAuthCode = async (code) => {
   const key = `${KEY_PREFIX}${code}`;
 
-  // GETDEL atomically fetches and removes the code so it can only ever be used once,
-  // even under concurrent requests.
+  
   const raw = await redisClient.getdel(key);
   if (!raw) return null;
 

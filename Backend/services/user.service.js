@@ -143,8 +143,7 @@ const refreshAccessToken = async (refreshToken) => {
     throw new AppError("Refresh token is required", 401);
   }
 
-  // Fast path: if it's not in Redis, it's already been logged out/revoked -
-  // reject immediately without touching Mongo.
+  
   const isActive = await tokenService.isRefreshTokenActive(refreshToken);
   if (!isActive) {
     throw new AppError("Invalid or expired refresh token", 403);
