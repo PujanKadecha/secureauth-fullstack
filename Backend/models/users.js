@@ -14,11 +14,6 @@ const userSChema = mongoose.Schema({
     type: String,
     required: true,
   },
-  refreshToken: [
-    {
-      type: String,
-    },
-  ],
 
   isVerified: {
     type: Boolean,

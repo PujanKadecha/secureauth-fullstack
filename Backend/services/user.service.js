@@ -78,8 +78,9 @@ const resetPassword = async (token, password) => {
   user.password = await bcrypt.hash(password, salt);
   user.resetPasswordToken = undefined;
   user.resetPasswordExpire = undefined;
-  user.refreshToken = [];
   await user.save();
+
+  await redisService.deleteRefreshTokensForUser(user._id.toString());
 
   await activityService.logActivity({
     userId: user._id,
@@ -99,7 +100,7 @@ const updateProfile = async (userId, name) => {
     userId,
     { $set: { name: name.trim() } },
     { new: true, runValidators: true },
-  ).select("-password -refreshToken");
+  ).select("-password");
 
   if (!updatedUser) {
     throw new AppError("User Not Found", 404);
@@ -137,22 +138,23 @@ const refreshAccessToken = async (refreshToken) => {
     throw new AppError("Refresh token is required", 401);
   }
 
-  const user = await User.findOne({ refreshToken: refreshToken });
-  if (!user) {
-    throw new AppError("Invalid or expired refresh token", 403);
-  }
-
   try {
     tokenService.verifyRefreshToken(refreshToken);
   } catch (e) {
-    await User.updateOne(
-      {_id : user._id},
-      {$pull: { refreshToken: refreshToken }}
-    );
+    await redisService.deleteRefreshToken(refreshToken);
     throw new AppError("Refresh token verification failed", 403);
   }
 
-  const accessToken = tokenService.generateAccessToken(user, "15m");
+  const userId = await redisService.getUserIdByRefreshToken(refreshToken);
+  if (!userId) {
+    throw new AppError("Invalid or expired refresh token", 403);
+  }
+
+  const user = await User.findById(userId);
+  if (!user) {
+    await redisService.deleteRefreshToken(refreshToken);
+    throw new AppError("Invalid or expired refresh token", 403);
+  }
 
   return tokenService.generateAccessToken(user, "15m");
 };

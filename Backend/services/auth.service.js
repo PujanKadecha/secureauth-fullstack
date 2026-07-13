@@ -3,6 +3,7 @@ const crypto = require("crypto");
 const User = require("../models/users");
 const mailService = require("./mail.service");
 const tokenService = require("./token.service");
+const redisService = require("./redis.service");
 const twoFactorService = require("./twoFactor.service");
 const activityService = require("./activity.service");
 const AppError = require("../utils/AppError");
@@ -113,10 +114,7 @@ const login = async ({ email, password }) => {
 
 const logout = async (token) => {
   if (token) {
-    await User.updateOne(
-      { refreshToken: token },
-      { $pull: { refreshToken: token } },
-    );
+    await redisService.deleteRefreshToken(token);
   }
 };
 
