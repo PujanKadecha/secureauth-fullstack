@@ -98,7 +98,7 @@ exports.updateUserRole = catchAsync(async (req, res) => {
   const updatedUser = await User.findByIdAndUpdate(
     req.params.id,
     { role },
-    { new: true },
+    { returnDocument: "after" },
   ).select("-password");
 
   if (!updatedUser) {

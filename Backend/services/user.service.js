@@ -104,7 +104,7 @@ const updateProfile = async (userId, name) => {
   const updatedUser = await User.findByIdAndUpdate(
     userId,
     { $set: { name: name.trim() } },
-    { new: true, runValidators: true },
+    { returnDocument: "after", runValidators: true },
   ).select("-password -refreshToken");
 
   if (!updatedUser) {
@@ -128,7 +128,7 @@ const updateUser = async (id, body) => {
   }
 
   const updatedUser = await User.findByIdAndUpdate(id, body, {
-    new: true,
+    returnDocument: "after",
   }).select("-password");
 
   if (!updatedUser) {
