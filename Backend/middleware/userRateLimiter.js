@@ -1,4 +1,6 @@
 const rateLimit = require("express-rate-limit");
+const { RedisStore } = require("rate-limit-redis");
+const redisClient = require("../config/redis.js");
 
 const userLoginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -9,6 +11,10 @@ const userLoginLimiter = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
+  store: new RedisStore({
+    prefix: "rl:user-login:",
+    sendCommand: (...args) => redisClient.call(...args),
+  }),
 });
 
 module.exports = { userLoginLimiter };

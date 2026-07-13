@@ -1,4 +1,6 @@
 const rateLimit = require("express-rate-limit");
+const { RedisStore } = require("rate-limit-redis");
+const redisClient = require("../config/redis.js");
 
 const generalLimiter = rateLimit({
     windowMs : 15 * 60 * 1000,
@@ -7,7 +9,11 @@ const generalLimiter = rateLimit({
         error : "To many request From this IP"
     },
     standardHeaders: true,
-    legacyHeaders: false
+    legacyHeaders: false,
+    store: new RedisStore({
+        prefix: "rl:general:",
+        sendCommand: (...args) => redisClient.call(...args),
+    }),
 });
 
 const authLimitter = rateLimit({
@@ -18,6 +24,10 @@ const authLimitter = rateLimit({
     },
     standardHeaders: true,
     legacyHeaders: false,
+    store: new RedisStore({
+        prefix: "rl:auth:",
+        sendCommand: (...args) => redisClient.call(...args),
+    }),
 });
 
 

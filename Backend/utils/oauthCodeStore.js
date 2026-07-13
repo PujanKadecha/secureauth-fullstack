@@ -1,27 +1,35 @@
 const crypto = require("crypto");
+const redisClient = require("../config/redis.js");
 
-const codes = new Map();
-const CODE_TTL_MS = 60 * 1000;
+const CODE_TTL_SECONDS = 60;
+const KEY_PREFIX = "oauth:code:";
 
-const createOAuthCode = (payload) => {
+const createOAuthCode = async (payload) => {
   const code = crypto.randomBytes(32).toString("hex");
 
-  codes.set(code, { payload, expiresAt: Date.now() + CODE_TTL_MS });
-
-  setTimeout(() => codes.delete(code), CODE_TTL_MS).unref();
+  await redisClient.set(
+    `${KEY_PREFIX}${code}`,
+    JSON.stringify(payload),
+    "EX",
+    CODE_TTL_SECONDS,
+  );
 
   return code;
 };
 
-const consumeOAuthCode = (code) => {
-  const entry = codes.get(code);
-  if (!entry) return null;
+const consumeOAuthCode = async (code) => {
+  const key = `${KEY_PREFIX}${code}`;
 
-  codes.delete(code);
+  // GETDEL atomically fetches and removes the code so it can only ever be used once,
+  // even under concurrent requests.
+  const raw = await redisClient.getdel(key);
+  if (!raw) return null;
 
-  if (Date.now() > entry.expiresAt) return null;
-
-  return entry.payload;
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
 };
 
 module.exports = { createOAuthCode, consumeOAuthCode };

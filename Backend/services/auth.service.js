@@ -15,7 +15,7 @@ const register = async ({ name, email, password, confirmPassword }) => {
 
   if (password !== confirmPassword) {
     throw new AppError("Passwords do not match", 400);
-  }
+  }z
 
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
@@ -25,7 +25,7 @@ const register = async ({ name, email, password, confirmPassword }) => {
     name,
     email,
     password: hashedPassword,
-    verificationToken: emailToken,zz
+    verificationToken: emailToken,
   });
 
   mailService.sendVerificationEmail(newUser, emailToken).catch((emailErr) => {
@@ -117,6 +117,7 @@ const logout = async (token) => {
       { refreshToken: token },
       { $pull: { refreshToken: token } },
     );
+    await tokenService.revokeRefreshToken(token);
   }
 };
 

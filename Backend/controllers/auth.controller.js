@@ -50,7 +50,7 @@ exports.googleCallback = catchAsync(async (req, res) => {
 
   res.cookie("refreshToken", refreshToken, refreshCookieOptions);
 
-  const code = createOAuthCode({
+  const code = await createOAuthCode({
     accessToken,
     user: {
       id: user._id,
@@ -72,7 +72,7 @@ exports.exchangeOAuthCode = catchAsync(async (req, res) => {
     throw new AppError("Missing OAuth code", 400);
   }
 
-  const payload = consumeOAuthCode(code);
+  const payload = await consumeOAuthCode(code);
 
   if (!payload) {
     throw new AppError("Invalid or expired OAuth code", 400);

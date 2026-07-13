@@ -78,8 +78,14 @@ const resetPassword = async (token, password) => {
   user.password = await bcrypt.hash(password, salt);
   user.resetPasswordToken = undefined;
   user.resetPasswordExpire = undefined;
+
+  const tokensToRevoke = user.refreshToken;
   user.refreshToken = [];
   await user.save();
+
+  await Promise.all(
+    tokensToRevoke.map((t) => tokenService.revokeRefreshToken(t)),
+  );
 
   await activityService.logActivity({
     userId: user._id,
@@ -137,6 +143,13 @@ const refreshAccessToken = async (refreshToken) => {
     throw new AppError("Refresh token is required", 401);
   }
 
+  // Fast path: if it's not in Redis, it's already been logged out/revoked -
+  // reject immediately without touching Mongo.
+  const isActive = await tokenService.isRefreshTokenActive(refreshToken);
+  if (!isActive) {
+    throw new AppError("Invalid or expired refresh token", 403);
+  }
+
   const user = await User.findOne({ refreshToken: refreshToken });
   if (!user) {
     throw new AppError("Invalid or expired refresh token", 403);
@@ -149,6 +162,7 @@ const refreshAccessToken = async (refreshToken) => {
       {_id : user._id},
       {$pull: { refreshToken: refreshToken }}
     );
+    await tokenService.revokeRefreshToken(refreshToken);
     throw new AppError("Refresh token verification failed", 403);
   }
 
