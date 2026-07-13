@@ -10,7 +10,7 @@ router.get(
   authenticationToken,
   authorizeRole("admin"),
   userController.getUsers,
-);z
+);
 router.get(
   "/logs",
   authenticationToken,

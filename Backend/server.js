@@ -9,4 +9,4 @@ connectDB().then(() => {
       `Server running and listening on IPv4 at http://localhost:${PORT}`,
     );
   });
-});z
+});
