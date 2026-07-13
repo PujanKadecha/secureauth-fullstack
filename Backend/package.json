@@ -30,6 +30,7 @@
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "qrcode": "^1.5.4",
+    "redis": "^6.1.0",
     "resend": "^6.17.1"
   }
 }
