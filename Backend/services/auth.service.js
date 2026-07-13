@@ -5,6 +5,7 @@ const mailService = require("./mail.service");
 const tokenService = require("./token.service");
 const twoFactorService = require("./twoFactor.service");
 const activityService = require("./activity.service");
+const redisService = require ("../services/redis.service");
 const AppError = require("../utils/AppError");
 
 const register = async ({ name, email, password, confirmPassword }) => {
@@ -15,7 +16,7 @@ const register = async ({ name, email, password, confirmPassword }) => {
 
   if (password !== confirmPassword) {
     throw new AppError("Passwords do not match", 400);
-  }z
+  }
 
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
@@ -113,10 +114,7 @@ const login = async ({ email, password }) => {
 
 const logout = async (token) => {
   if (token) {
-    await User.updateOne(
-      { refreshToken: token },
-      { $pull: { refreshToken: token } },
-    );
+    await redisService.deleteRefreshToken(token);
   }
 };
 
