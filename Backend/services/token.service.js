@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const redisService = require ("../services/redis.service");
 require("dotenv").config();
 
 const JWT_KEY = process.env.JWT_KEY;
@@ -19,10 +18,8 @@ const generateAuthTokens = async (user) => {
   const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user);
 
-  await redisService.storeRefreshTokens(
-    refreshToken,
-    user._id.toString()
-);
+  user.refreshToken.push(refreshToken);
+  await user.save();
 
   return { accessToken, refreshToken };
 };

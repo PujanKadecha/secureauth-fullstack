@@ -5,7 +5,6 @@ const mailService = require("./mail.service");
 const tokenService = require("./token.service");
 const twoFactorService = require("./twoFactor.service");
 const activityService = require("./activity.service");
-const redisService = require ("../services/redis.service");
 const AppError = require("../utils/AppError");
 
 const register = async ({ name, email, password, confirmPassword }) => {
@@ -26,7 +25,7 @@ const register = async ({ name, email, password, confirmPassword }) => {
     name,
     email,
     password: hashedPassword,
-    verificationToken: emailToken,
+    verificationToken: emailToken,zz
   });
 
   mailService.sendVerificationEmail(newUser, emailToken).catch((emailErr) => {
@@ -114,7 +113,10 @@ const login = async ({ email, password }) => {
 
 const logout = async (token) => {
   if (token) {
-    await redisService.deleteRefreshToken(token);
+    await User.updateOne(
+      { refreshToken: token },
+      { $pull: { refreshToken: token } },
+    );
   }
 };
 
