@@ -1,10 +1,8 @@
 const jwt = require("jsonwebtoken");
-const redisService = require("./redis.service");
 require("dotenv").config();
 
 const JWT_KEY = process.env.JWT_KEY;
 const REFRESH_KEY = process.env.REFRESH_KEY;
-const REFRESH_TOKEN_TTL = 7 * 24 * 60 * 60;
 
 const generateAccessToken = (user, expiresIn = "20m") => {
   return jwt.sign({ id: user._id, role: user.role }, JWT_KEY, { expiresIn });
@@ -20,7 +18,8 @@ const generateAuthTokens = async (user) => {
   const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user);
 
-  await redisService.storeRefreshToken(refreshToken, user._id.toString());
+  user.refreshToken.push(refreshToken);
+  await user.save();
 
   return { accessToken, refreshToken };
 };
