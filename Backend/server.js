@@ -11,6 +11,12 @@ async function startServer() {
 
     await redisClient.connect();
 
+    await redisClient.set("project", "SecureAuth");
+
+    const value = await redisClient.get("project");
+
+    console.log(value);
+
     app.listen(PORT, () => {
       console.log(
         `Server running and listening on IPv4 at http://localhost:${PORT}`,
