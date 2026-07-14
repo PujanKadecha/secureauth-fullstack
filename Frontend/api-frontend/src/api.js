@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://secureauth-backend-wpzt.onrender.com/api",
+  baseURL: "https://secureauth-backend-udsa.onrender.com/api",
   timeout: 10000,
   withCredentials: true, 
 });
