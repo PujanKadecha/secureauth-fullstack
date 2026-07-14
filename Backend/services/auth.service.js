@@ -81,7 +81,7 @@ const login = async ({ email, password }) => {
   }
 
   if (!user.isVerified) {
-    throw new AppError("Please Verify User", 401);
+    throw new AppError("Please verify your email before logging in. Check your inbox for the verification link.", 401);
   }
 
   await activityService.logActivity({

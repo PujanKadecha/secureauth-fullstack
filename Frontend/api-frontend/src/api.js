@@ -24,9 +24,22 @@ API.interceptors.response.use(
 
     console.log(` Error ${error.response?.status} on ${originalRequest?.url}`);
 
+    // Don't attempt token refresh for auth endpoints (login, register, verify-email, etc.)
+    const authEndpoints = [
+      "/auth/login",
+      "/auth/register",
+      "/auth/verify-email",
+      "/auth/2fa/verify-login",
+    ];
+    
+    const isAuthEndpoint = authEndpoints.some(endpoint =>
+      originalRequest?.url?.includes(endpoint)
+    );
+
     if (
       (error.response?.status === 401 || error.response?.status === 403) &&
-      !originalRequest._retry
+      !originalRequest._retry &&
+      !isAuthEndpoint
     ) {
       originalRequest._retry = true;
 
