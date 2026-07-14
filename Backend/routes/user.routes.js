@@ -4,6 +4,7 @@ const authenticationToken = require("../middleware/authentication");
 const authorizeRole = require("../middleware/authorize");
 const userController = require("../controllers/user.controller");
 const { validateRoleChange,validateResetPassword } = require("../middleware/validator");
+const { authLimitter } = require("../middleware/rateLimiter");
 
 router.get(
   "/",
@@ -24,8 +25,8 @@ router.delete(
   authorizeRole("admin"),
   userController.deleteUser,
 );
-router.post("/forgot-password", userController.forgotPassword);
-router.post("/reset-password/:token", validateResetPassword, userController.resetPassword);
+router.post("/forgot-password", authLimitter, userController.forgotPassword);
+router.post("/reset-password/:token", authLimitter, validateResetPassword, userController.resetPassword);
 router.put("/profile", authenticationToken, userController.updateProfile);
 router.put("/:id", authenticationToken, userController.updateUser);
 router.post("/refresh", userController.refreshToken);
