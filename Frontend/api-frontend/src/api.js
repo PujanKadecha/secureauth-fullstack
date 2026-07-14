@@ -24,7 +24,6 @@ API.interceptors.response.use(
 
     console.log(` Error ${error.response?.status} on ${originalRequest?.url}`);
 
-    // Don't attempt token refresh for auth endpoints (login, register, verify-email, etc.)
     const authEndpoints = [
       "/auth/login",
       "/auth/register",
@@ -44,8 +43,6 @@ API.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        console.log("🔄 Refreshing token...");
-
         const res = await axios.post(
           "https://secureauth-backend-udsa.onrender.com/api/users/refresh",
           {},
