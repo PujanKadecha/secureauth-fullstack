@@ -4,12 +4,13 @@ const redisClient = require("../config/redis.js");
 
 const generalLimiter = rateLimit({
     windowMs : 15 * 60 * 1000,
-    max : 100,
+    max : 300,
     message : {
-        error : "To many request From this IP"
+        error : "Too many requests from this IP. Please try again shortly."
     },
     standardHeaders: true,
     legacyHeaders: false,
+    passOnStoreError: true,
     store: new RedisStore({
         prefix: "rl:general:",
         sendCommand: (...args) => redisClient.call(...args),
@@ -18,12 +19,13 @@ const generalLimiter = rateLimit({
 
 const authLimitter = rateLimit({
     windowMs : 15 * 60 * 1000,
-    max : 7 , 
+    max : 20,
     message : {
-        error : "Too many login/registration attempts"
+        error : "Too many login/registration attempts. Please wait 15 minutes and try again."
     },
     standardHeaders: true,
     legacyHeaders: false,
+    passOnStoreError: true,
     store: new RedisStore({
         prefix: "rl:auth:",
         sendCommand: (...args) => redisClient.call(...args),
