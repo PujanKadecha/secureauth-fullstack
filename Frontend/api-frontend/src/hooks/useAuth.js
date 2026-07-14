@@ -156,7 +156,7 @@ export function useAuth() {
         name,
         email,
         password,
-        confirmPassword,
+        confirmPassword : password,
       });
       setMessage(res.data.message);
       setName("");
