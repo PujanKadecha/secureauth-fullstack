@@ -143,15 +143,14 @@ const refreshAccessToken = async (refreshToken) => {
     throw new AppError("Refresh token is required", 401);
   }
 
-  
-  const isActive = await tokenService.isRefreshTokenActive(refreshToken);
-  if (!isActive) {
-    throw new AppError("Invalid or expired refresh token", 403);
-  }
-
   const user = await User.findOne({ refreshToken: refreshToken });
   if (!user) {
     throw new AppError("Invalid or expired refresh token", 403);
+  }
+
+  const isActive = await tokenService.isRefreshTokenActive(refreshToken);
+  if (!isActive) {
+    await tokenService.cacheRefreshToken(refreshToken, user._id);
   }
 
   try {
